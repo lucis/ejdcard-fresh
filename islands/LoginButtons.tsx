@@ -30,6 +30,7 @@ export default function LoginButtons() {
     //   shouldCreateUser: true,
     //   redirectTo,
     // }
+    console.log({ redirectTo });
     client.auth.signInWithOAuth({
       provider,
       options: {
