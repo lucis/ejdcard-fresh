@@ -7,7 +7,16 @@ type CreatedCardResponse = {
 
 export const handler = {
   GET: (_req: Request, _ctx: HandlerContext) => {
-    return _ctx.render({});
+    const headers = new Headers();
+    headers.append("Location", "https://google.com");
+
+    return Response.json(
+      {},
+      {
+        status: 301,
+        headers,
+      }
+    );
   },
   POST: async (req: Request, _ctx: HandlerContext<CreatedCardResponse>) => {
     const client = createClient(
