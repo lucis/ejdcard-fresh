@@ -44,7 +44,7 @@ export function createPrivateHandler<T>(handler: Handler<T>): Handler<T> {
       returnUrlQuery.set(RETURN_URL_QUERY_PARAM, pathname);
 
       res = new Response(
-        user?.error.message ?? "Redirect to login",
+        user?.error.message ?? "Redirecting to login",
         {
           status: 302,
           headers: { location: `/login?${returnUrlQuery.toString()}` },
