@@ -1,23 +1,19 @@
 import { Handlers, HandlerContext, PageProps } from "$fresh/server.ts";
 import { createClient } from "supabase";
 
+type Card = {
+  name: string;
+  phone: string;
+  card_number: string;
+  balance: number;
+};
+
 type CreatedCardResponse = {
-  cardId: number;
+  card: Card;
+  errorMessage?: string;
 };
 
 export const handler = {
-  GET: (_req: Request, _ctx: HandlerContext) => {
-    const headers = new Headers();
-    headers.append("Location", "https://google.com");
-
-    return Response.json(
-      {},
-      {
-        status: 301,
-        headers,
-      }
-    );
-  },
   POST: async (req: Request, _ctx: HandlerContext<CreatedCardResponse>) => {
     const client = createClient(
       "https://nytnqaopjcnvsebekgsy.supabase.co",
@@ -48,27 +44,40 @@ export const handler = {
       ),
     };
 
-    const { data, error } = await client.from("cards").insert(card);
+    const { data, error } = await client.from("cards").insert(card).select();
 
     if (error) {
-      return Response.json(
-        { error: error.message },
-        {
-          status: 400,
-        }
-      );
+      const isDuplicateError = error?.message?.includes("duplicate key value");
+
+      const userErrorMessage = isDuplicateError
+        ? `Cartão ${card.card_number} já cadastrado.`
+        : `Ocorreu um erro ao salvar o cartão`;
+
+      return _ctx.render({ errorMessage: userErrorMessage, card });
     }
 
-    console.log(data);
-    return _ctx.render({ cardId: data[0].id });
+    const createdCard = data[0] as Card;
+
+    return _ctx.render({ card: createdCard });
   },
 } as Handlers;
 
 export default function NewCard(props: PageProps<CreatedCardResponse>) {
+  const hasError = !!props?.data?.errorMessage;
+  const hasSuccess = !!props?.data?.card && !hasError;
+
   return (
     <div>
-      {props.data.cardId && (
-        <span class="text-center p-4">{`Cartão ${props.data.cardId} cadastrado com sucesso.`}</span>
+      {hasSuccess && (
+        <div>
+          <span class="text-center p-4">{`Cartão ${props?.data?.card.card_number} cadastrado com sucesso.`}</span>
+          {JSON.stringify(props.data.card)}
+        </div>
+      )}
+      {hasError && (
+        <div>
+          <span class="text-red-600">{props.data?.errorMessage}</span>
+        </div>
       )}
       <div class="flex flex-row justify-center">
         <h1 class="text-2xl font-bold p-4">Criar cartão</h1>
