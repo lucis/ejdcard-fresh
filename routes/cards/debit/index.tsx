@@ -70,30 +70,32 @@ export default function CardDebit(props: PageProps<PageData>) {
           {`Operação para cartão ${cardNumber} realizada com sucesso.`}
         </span>
       )}
-      <form
-        action="/cards/debit/confirm"
-        method="post"
-        class="flex flex-col p-4 items-start"
-      >
-        <label>Número do Cartão</label>
-        <input
-          type="text"
-          name="card_number"
-          inputMode="numeric"
-          pattern="[0-9]*"
-          required
-          autoFocus
-          class="border border-black rounded"
-        />
-        <label>Valor da Transação</label>
-        <input
-          type="text"
-          name="amount"
-          inputMode="decimal"
-          pattern="[0-9,]*"
-          required
-          class="border border-black"
-        />
+      <form action="/cards/debit/confirm" method="post">
+        <div class="flex flex-row p-4">
+          <div class="flex-col flex w-1/2">
+            <label>Número do Cartão</label>
+            <input
+              type="text"
+              name="card_number"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              required
+              autoFocus
+              class="border border-black rounded bg-blue-400 p-2 text-2xl font-bold border-blue-800"
+            />
+          </div>
+          <div class="flex flex-col pl-2 w-1/4">
+            <label>Valor da Transação</label>
+            <input
+              type="text"
+              name="amount"
+              inputMode="decimal"
+              pattern="[0-9,]*"
+              required
+              class="border border-black rounded bg-blue-400 p-2 text-2xl font-bold border-blue-800"
+            />
+          </div>
+        </div>
         <button
           type="submit"
           class="inline-flex mt-4 items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
