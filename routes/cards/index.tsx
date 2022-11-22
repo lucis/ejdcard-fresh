@@ -40,9 +40,9 @@ const operationPages: Record<Operation, { label: string; href: string }> = {
   },
 };
 // TODO: Replace with automatic types from Supabase
-type Profile = {
+export type Profile = {
   id: string;
-  name: string;
+  email: string;
   permissions?: string;
 };
 
