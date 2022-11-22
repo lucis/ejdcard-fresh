@@ -1,16 +1,22 @@
 import { Handlers, HandlerContext, PageProps } from "$fresh/server.ts";
 import { createPrivateHandler, EjdcardState } from "../../../auth.ts";
 
-type PageData = { successCardNumber?: number; errorMessage?: string };
+type PageData = {
+  successCardNumber?: number;
+  errorMessage?: string;
+  op: "credit" | "debit";
+};
 
 export const handler = {
   GET: (req: Request, _ctx: HandlerContext<PageData>) => {
     const url = new URL(req.url);
     const search = new URLSearchParams(url.search);
     const cardNumber = search.get("successCardNumber");
+    const op = search.get("op") === "credit" ? "credit" : "debit";
 
     return _ctx.render({
       successCardNumber: cardNumber ? parseInt(cardNumber, 10) : undefined,
+      op,
     });
   },
   POST: createPrivateHandler(
@@ -19,12 +25,13 @@ export const handler = {
       const data = await req.formData();
       const cardNumber = data.get("card_number"); // 123
       const updatedBalanceRaw = data.get("updated_balance"); // 200
+      const op = data.get("op") === "credit" ? "credit" : "debit";
 
       if (
         typeof cardNumber !== "string" ||
         typeof updatedBalanceRaw !== "string"
       ) {
-        return ctx.render({ errorMessage: "Dados inválidos" });
+        return ctx.render({ errorMessage: "Dados inválidos", op });
       }
 
       const supabase = ctx.state.client;
@@ -34,6 +41,7 @@ export const handler = {
       if (updatedBalance < 0) {
         return ctx.render({
           errorMessage: "Novo saldo não pode ser menor que 0",
+          op,
         });
       }
 
@@ -46,12 +54,13 @@ export const handler = {
         console.log({ errorType: "DEBIT_DB", error });
         return ctx.render({
           errorMessage: "Ocorreu um erro inesperado, transação não efetuada.",
+          op,
         });
       }
 
       return new Response(null, {
         headers: {
-          location: "/cards/debit?successCardNumber=" + cardNumber,
+          location: `/cards/operation?successCardNumber=${cardNumber}&op=${op}`,
         },
         status: 302,
       });
@@ -59,9 +68,10 @@ export const handler = {
   ),
 } as Handlers;
 
-export default function CardDebit(props: PageProps<PageData>) {
+export default function CardOperation(props: PageProps<PageData>) {
   const cardNumber = props.data?.successCardNumber;
   const showMessage = typeof cardNumber === "number";
+  const op = props.data.op;
 
   return (
     <div>
@@ -70,7 +80,10 @@ export default function CardDebit(props: PageProps<PageData>) {
           {`Operação para cartão ${cardNumber} realizada com sucesso.`}
         </span>
       )}
-      <form action="/cards/debit/confirm" method="post">
+      <h1 class="text-2xl font-bold">
+        {op === "credit" ? "Recarga de Cartão" : "Venda com Cartão"}
+      </h1>
+      <form action={`/cards/operation/confirm?op=${op}`} method="post">
         <div class="flex flex-row p-4">
           <div class="flex-col flex w-1/2">
             <label>Número do Cartão</label>
@@ -85,7 +98,9 @@ export default function CardDebit(props: PageProps<PageData>) {
             />
           </div>
           <div class="flex flex-col pl-2 w-1/4">
-            <label>Valor da Transação</label>
+            <label>
+              {op === "debit" ? "Valor da Transação" : "Valor da Recarga"}
+            </label>
             <input
               type="text"
               name="amount"

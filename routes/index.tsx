@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Olá Fábio</title>
+        <title>EJDCard</title>
       </Head>
       <div class="p-4 mx-auto max-w-screen-md">
         <img
