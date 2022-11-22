@@ -1,7 +1,7 @@
 import { Handlers, HandlerContext, PageProps } from "$fresh/server.ts";
 import { createClient } from "supabase";
 
-type Card = {
+export type Card = {
   name: string;
   phone: string;
   card_number: string;
