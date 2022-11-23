@@ -1,11 +1,12 @@
 import { useEffect } from "preact/hooks";
 import {
-  getSupabaseClient,
+  getAnonSupabaseClient,
   DEFAULT_RETURN_URL,
   RETURN_URL_QUERY_PARAM,
 } from "../auth.ts";
 
-const client = getSupabaseClient();
+const client = getAnonSupabaseClient();
+
 const useAuthStateChange = () =>
   useEffect(() => {
     const { data: authListener } = client.auth.onAuthStateChange(

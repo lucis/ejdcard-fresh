@@ -6,11 +6,12 @@ export const RETURN_URL_QUERY_PARAM = "returnUrl";
 
 export const DEFAULT_RETURN_URL = "/private";
 
-export const getSupabaseClient = () => {
-  return createClient(
-    "https://nytnqaopjcnvsebekgsy.supabase.co",
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55dG5xYW9wamNudnNlYmVrZ3N5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjYzODI4OTksImV4cCI6MTk4MTk1ODg5OX0.eHQPZYkozJyUiW6Gu0xLIMNgcuDxl3aCBIAZzN3XB0k"
-  );
+const SUPABASE_PROJECT_URL = "https://nytnqaopjcnvsebekgsy.supabase.co";
+const SUPABASE_ANON_TOKEN =
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im55dG5xYW9wamNudnNlYmVrZ3N5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2NjYzODI4OTksImV4cCI6MTk4MTk1ODg5OX0.eHQPZYkozJyUiW6Gu0xLIMNgcuDxl3aCBIAZzN3XB0k";
+
+export const getAnonSupabaseClient = () => {
+  return createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_TOKEN);
 };
 
 export async function getSupabaseClientForUser(req: Request) {
@@ -18,7 +19,13 @@ export async function getSupabaseClientForUser(req: Request) {
   const refreshToken = cookies["my-refresh-token"];
   const accessToken = cookies["my-access-token"];
 
-  const client = getSupabaseClient();
+  const client = createClient(SUPABASE_PROJECT_URL, SUPABASE_ANON_TOKEN, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  });
 
   if (refreshToken && accessToken) {
     await client.auth.setSession({
