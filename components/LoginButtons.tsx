@@ -4,10 +4,14 @@ interface Props {
 
 export default function LoginButtons({ googleLoginUrl }: Props) {
   return (
-    <div>
-      <div class="absolute bottom-1/4 px-32">
-        <div class="text-8xl font-medium">Login/Cadastro</div>
-        <div class="mt-5 mb-20 text-xl ">Entre com sua conta Google</div>
+    <div class="bg-blue-200 h-screen w-full">
+      <div class="px-32 ">
+        <div class=" text-8xl font-medium font-title dark:text-primary-light">
+          EJD CARD
+        </div>
+        <div class="mt-5 ml-2 mb-20 text-3xl font-title dark:text-primary-light">
+          Para o alto!
+        </div>
         <div>
           <a
             class="transition duration-300 ease-out hover:ease-in rounded  border-2  hover:border-[#113131] flex items-center justify-center w-72 py-3 mt-3"

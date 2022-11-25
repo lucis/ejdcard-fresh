@@ -5,5 +5,5 @@ interface Props {
 }
 
 export default function RealDisplay({ valueInCents }: Props) {
-  return <span>{convertCentsToReaisString(valueInCents)}</span>;
+  return <span class="font-semibold text-xl italic">{convertCentsToReaisString(valueInCents)}</span>;
 }
