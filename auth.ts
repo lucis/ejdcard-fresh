@@ -32,8 +32,6 @@ export async function getSupabaseClientForUser(req: Request) {
       refresh_token: refreshToken,
       access_token: accessToken,
     });
-  } else {
-    return null;
   }
 
   return client;
