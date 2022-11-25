@@ -1,4 +1,4 @@
-import { Handlers, HandlerContext, PageProps } from "$fresh/server.ts";
+import { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import type { UserResponse } from "supabase";
 import { createPrivateHandler, EjdcardState } from "../../auth.ts";
 
@@ -14,28 +14,33 @@ const permissionLetterToOperation: Record<string, Operation> = {
   o: "onboard",
 };
 
-const operationPages: Record<Operation, { label: string; href: string }> = {
+const operationPages: Record<Operation, { label: string; href: string, description: string}> = {
   credit: {
     label: "Recarga de Cartão",
+    description: "Você deve receber dinheiro do usuário e adicionar crédito ao cartão.",
     href: "/cards/operation?op=credit",
   },
 
   debit: {
     label: "Vendas",
+    description:"para lojinha ou lanchonete. Tenha cuidado e digite com atenção!",
     href: "/cards/operation?op=debit",
   },
 
   onboard: {
     label: "Cadastro de Cartão",
+    description:"É necessario o número do cartão, o nome e celular do titular, e o saldo inicial",
     href: "/cards/new",
   },
 
   read: {
     label: "Consulta de Saldo",
+    description: "Você só vai precisar do número do cartão.",
     href: "/cards/query",
   },
   manage: {
     label: "Administração",
+    description:"Você poderá autorizar usuários e ver estatisticas sobre o evento.",
     href: "/cards/admin",
   },
 };
@@ -65,7 +70,7 @@ export const handler = {
         .map((letter) => permissionLetterToOperation[letter]);
 
       return ctx.render({ allowedOperations, user: ctx.state.user });
-    }
+    },
   ),
 } as Handlers;
 
@@ -77,19 +82,30 @@ export default function CardsIndex({
 }: PageProps<PageData>) {
   const email = userData?.user?.email;
   return (
-    <div class="p-4 flex flex-col">
-      <h1 class="text-2xl">{`Bem-vindx, ${email}`}</h1>
-      <span>Você tem acesso as seguintes páginas:</span>
-      <ul>
-        {allowedOperations.map((operation) => {
-          const { label, href } = operationPages[operation];
-          return (
-            <li class="pt-1">
-              <a href={href}>{label}</a>
-            </li>
-          );
-        })}
-      </ul>
+    <div class=" flex flex-col bg-[#BAE6FD] h-screen w-full p-4">
+      <div class="border border-black rounded-lg text-center max-w-xl m-auto px-5 py-10">
+        <div class="text-center">
+          <h1 class="text-2xl">
+            Bem-vindx, <span class="font-bold">{`${email}`}</span>
+          </h1>
+          <span class="text-lg">Você tem acesso as seguintes páginas:</span>
+        </div>
+        <ul class="mt-10">
+          {allowedOperations.map((operation) => {
+            const { label, href, description} = operationPages[operation];
+            return (
+              <div class="pt-3">
+                <a href={href}>
+                  <li class="border border-gray-400 border-2  rounded-lg p-4 shadow text-left hover:bg-gray-700 hover:text-white  transition-easy">
+                    <span class="font-semibold">{label}</span>
+                    <p>{description}</p>
+                  </li>
+                </a>
+              </div>
+            );
+          })}
+        </ul>
+      </div>
     </div>
   );
 }
