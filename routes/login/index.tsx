@@ -40,6 +40,7 @@ export const handler: Handler<LoginData> = async (req, ctx) => {
     });
   }
 
+  console.log({ redirectTo })
   const {
     data: { url: googleLoginUrl },
     error,
