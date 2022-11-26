@@ -30,8 +30,6 @@ export const handler: Handler<LoginData> = async (req, ctx) => {
 
   const client = await getSupabaseClientForUser(req);
 
-  console.log({ client });
-
   if (!client) {
     return ctx.render({
       loginLinks: {
@@ -40,7 +38,6 @@ export const handler: Handler<LoginData> = async (req, ctx) => {
     });
   }
 
-  console.log({ redirectTo })
   const {
     data: { url: googleLoginUrl },
     error,
@@ -51,7 +48,6 @@ export const handler: Handler<LoginData> = async (req, ctx) => {
     },
   });
 
-  console.log({ error });
   return ctx.render({
     loginLinks: {
       google: googleLoginUrl ?? "#",

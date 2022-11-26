@@ -1,5 +1,6 @@
 import { HandlerContext, Handlers, PageProps } from "$fresh/server.ts";
 import { createPrivateHandler, EjdcardState } from "../../../auth.ts";
+import RealInput from "$ejdcard/islands/RealInput.tsx";
 
 type PageData = {
   successCardNumber?: number;
@@ -64,7 +65,7 @@ export const handler = {
         },
         status: 302,
       });
-    },
+    }
   ),
 } as Handlers;
 
@@ -75,6 +76,9 @@ export default function CardOperation(props: PageProps<PageData>) {
 
   return (
     <div class="bg-[#BAE6FD] h-screen w-full rounded-xl p-6 mx-auto md:mt-0 text-[#113032]">
+      <a href="/cards" class="text-xl font-bold p-2 mb-2 text-blue-600">
+        Voltar
+      </a>
       {showMessage && (
         <span class="text-green-700">
           {`Operação para cartão ${cardNumber} realizada com sucesso.`}
@@ -97,7 +101,7 @@ export default function CardOperation(props: PageProps<PageData>) {
                   pattern="[0-9]*"
                   required
                   autoFocus
-                  class="text-black text-2xl font-normal w-full mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
+                  class="text-black text-2xl font-normal w-full mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-lg border-gray-300 rounded-lg placeholder-[#B8BCCA]"
                 />
               </div>
             </div>
@@ -106,21 +110,16 @@ export default function CardOperation(props: PageProps<PageData>) {
                 {op === "debit" ? "Valor da Transação:" : "Valor da Recarga:"}
               </label>
               <div class="w-1/2">
-                <input
-                  type="text"
+                <RealInput
                   name="amount"
-                  inputMode="decimal"
-                  pattern="[0-9,]*"
-                  placeholder=""
-                  required
-                  class="text-black w-full text-2xl font-normal mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
+                  classes="text-black w-full text-2xl font-normal mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
                 />
               </div>
             </div>
             <div class="mt-6">
               <button
                 type="submit"
-                class="inline-flex mt-6 items-center px-6 mt-4 py-3 font-bold border border-transparent text-lg leading-4 font-medium rounded-md shadow-sm text-white bg-black hover:bg-gray-800 focus:outline-none transition-easy"
+                class="inline-flex mt-6 items-center px-6 mt-4 py-3 font-bold border border-transparent text-lg leading-4 font-medium rounded-md shadow-sm text-white bg-black hover:bg-gray-800 focus:outline-none"
               >
                 Enviar
               </button>
