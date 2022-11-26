@@ -80,52 +80,54 @@ export default function CardOperation(props: PageProps<PageData>) {
           {`Operação para cartão ${cardNumber} realizada com sucesso.`}
         </span>
       )}
-      <h1 class="text-4xl font-bold">
-        {op === "credit" ? "Recarga de Cartão" : "Venda com Cartão"}
-      </h1>
-      <form action={`/cards/operation/confirm?op=${op}`} method="post">
-        <div class="p-4">
-          <div class="">
-            <label class="text-2xl">Número do Cartão:</label>
+      <div class="border border-black rounded-lg p-4 max-w-xl mx-auto">
+        <h1 class="text-4xl font-bold text-center">
+          {op === "credit" ? "Recarga de Cartão" : "Venda com Cartão"}
+        </h1>
+        <form action={`/cards/operation/confirm?op=${op}`} method="post">
+          <div class="p-4">
+            <div class="">
+              <label class="text-2xl">Número do Cartão:</label>
 
-            <div class="w-1/2">
-              <input
-                type="text"
-                name="card_number"
-                inputMode="numeric"
-                pattern="[0-9]*"
-                required
-                autoFocus
-                class="text-black text-2xl font-normal w-full mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
-              />
+              <div class="w-1/2">
+                <input
+                  type="text"
+                  name="card_number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
+                  required
+                  autoFocus
+                  class="text-black text-2xl font-normal w-full mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
+                />
+              </div>
+            </div>
+            <div class="mt-6">
+              <label class="text-2xl">
+                {op === "debit" ? "Valor da Transação:" : "Valor da Recarga:"}
+              </label>
+              <div class="w-1/2">
+                <input
+                  type="text"
+                  name="amount"
+                  inputMode="decimal"
+                  pattern="[0-9,]*"
+                  placeholder=""
+                  required
+                  class="text-black w-full text-2xl font-normal mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
+                />
+              </div>
+            </div>
+            <div class="mt-6">
+              <button
+                type="submit"
+                class="inline-flex mt-6 items-center px-6 mt-4 py-3 font-bold border border-transparent text-lg leading-4 font-medium rounded-md shadow-sm text-white bg-black hover:bg-gray-800 focus:outline-none transition-easy"
+              >
+                Enviar
+              </button>
             </div>
           </div>
-          <div class="mt-6">
-            <label class="text-2xl">
-              {op === "debit" ? "Valor da Transação:" : "Valor da Recarga:"}
-            </label>
-            <div class="w-1/2">
-              <input
-                type="text"
-                name="amount"
-                inputMode="decimal"
-                pattern="[0-9,]*"
-                placeholder=""
-                required
-                class="text-black w-full text-2xl font-normal mt-2 focus:outline-none block w-full bg-gray-100 p-2 sm:text-md border-gray-300 rounded-lg placeholder-[#B8BCCA]"
-              />
-            </div>
-          </div>
-          <div class="mt-6">
-            <button
-              type="submit"
-              class="inline-flex mt-6 items-center px-5 mt-4 py-3 font-semibold border border-transparent text-lg leading-4 font-medium rounded-md shadow-sm text-white bg-black hover:bg-gray-800 focus:outline-none transition-easy"
-            >
-              Enviar
-            </button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   );
 }
